@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>ORBITAL STATION — Missions & Logbook</title>
+
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body class="app theme-default" data-page="missions">
+    <div class="shell">
+      <!-- Sidebar -->
+      <aside class="sidebar" aria-label="Station command sidebar">
+        <div class="sidebar__brand">
+          <div class="sidebar__title">STATION<br />COMMAND</div>
+          <div class="sidebar__meta">v <span>2.4.0-REL</span></div>
+        </div>
+
+        <nav class="snav" aria-label="Sidebar navigation">
+          <a class="snav__item" href="index.html"><span class="snav__icon" aria-hidden="true">▦</span> Overview</a>
+          <a class="snav__item" href="systems.html"><span class="snav__icon" aria-hidden="true">⛭</span> Systems &amp; Controls</a>
+          <a class="snav__item" href="crew.html"><span class="snav__icon" aria-hidden="true">👥</span> Crew &amp; Modules</a>
+          <a class="snav__item is-active" href="missions.html"><span class="snav__icon" aria-hidden="true">🗒</span> Missions &amp; Logbook</a>
+
+          <div class="snav__divider"></div>
+
+          <a class="snav__item" href="#" aria-disabled="true"><span class="snav__icon" aria-hidden="true">📹</span> External Cams</a>
+        </nav>
+
+        <div class="sidebar__footer">
+          <button class="snav__logout" id="signOutBtn" type="button">⟵ Sign Out</button>
+        </div>
+      </aside>
+
+      <!-- Main content -->
+      <main class="content">
+        <header class="content__topbar" aria-label="Mission control topbar">
+          <div class="mc">
+            <div class="mc__icon" aria-hidden="true">🚀</div>
+            <div class="mc__text">
+              <div class="mc__title">MISSION CONTROL</div>
+              <div class="mc__sub"><span class="dot dot--green" aria-hidden="true"></span> LIVE CONNECTION</div>
+            </div>
+          </div>
+
+          <div class="content__topbarRight">
+            <div class="timepair">
+              <div>MET: <span id="metTime">--:--:--</span></div>
+              <div class="muted">UTC: <span id="utcTime">--:--:--</span></div>
+            </div>
+            <button class="iconbtn" type="button" aria-label="Notifications">🔔</button>
+            <button class="iconbtn" type="button" aria-label="Settings">⚙</button>
+            <button class="chipbtn" type="button" aria-label="Commander profile">CM</button>
+          </div>
+        </header>
+
+        <section class="pagehead pagehead--split">
+          <div>
+            <h1 class="pagehead__title">MISSIONS &amp; LOGBOOK</h1>
+            <p class="pagehead__subtitle">Track active mission objectives and station logs.</p>
+          </div>
+
+          <div class="pagehead__right">
+            <div class="pill">
+              <span class="dot dot--cyan" aria-hidden="true"></span>
+              ACTIVE MISSIONS: <strong id="activeMissions">0</strong>
+            </div>
+            <div class="pill">
+              <span class="dot dot--amber" aria-hidden="true"></span>
+              UNREAD LOGS: <strong id="unreadLogs">0</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="grid2 grid2--missions">
+          <!-- Left: mission timeline -->
+          <section class="timeline" aria-label="Mission timeline">
+            <header class="panelhead">
+              <div class="panelhead__title">
+                <span class="icon" aria-hidden="true">📈</span>
+                MISSION TIMELINE
+              </div>
+            </header>
+
+            <div class="timeline__body" id="missionTimeline">
+              <!-- JS injects mission cards -->
+            </div>
+          </section>
+
+          <!-- Right: station logbook -->
+          <section class="logbook" aria-label="Station logbook">
+            <header class="panelhead panelhead--split">
+              <div class="panelhead__title">
+                <span class="icon" aria-hidden="true">📘</span>
+                STATION LOGBOOK
+              </div>
+
+              <div class="panelhead__right">
+                <label class="select" aria-label="Filter log priorities">
+                  <span class="select__label">FILTER:</span>
+                  <select id="logFilter">
+                    <option value="all">All Priorities</option>
+                    <option value="high">High</option>
+                    <option value="medium">Medium</option>
+                    <option value="low">Low</option>
+                  </select>
+                </label>
+              </div>
+            </header>
+
+            <div class="logbook__list" id="logList" aria-label="Log entries">
+              <!-- JS injects log entries -->
+            </div>
+          </section>
+        </section>
+
+        <section class="grid2 grid2--lower">
+          <!-- New log entry -->
+          <section class="formcard" aria-label="New log entry">
+            <header class="panelhead">
+              <div class="panelhead__title">
+                <span class="icon" aria-hidden="true">➕</span>
+                NEW LOG ENTRY
+              </div>
+            </header>
+
+            <form class="form" id="logForm">
+              <div class="field">
+                <label class="field__label" for="logTitle">TITLE</label>
+                <input class="field__input" id="logTitle" name="title" type="text" placeholder="Enter log title…" required />
+              </div>
+
+              <div class="form__row">
+                <div class="field">
+                  <label class="field__label" for="logPriority">PRIORITY</label>
+                  <select class="field__input" id="logPriority" name="priority">
+                    <option value="low">Low — Grey</option>
+                    <option value="medium">Medium — Amber</option>
+                    <option value="high">High — Red</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label class="field__label" for="authCode">AUTH CODE</label>
+                  <input class="field__input" id="authCode" name="auth" type="text" value="CM-8821" />
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="field__label" for="logMessage">MESSAGE</label>
+                <textarea class="field__input field__input--textarea" id="logMessage" name="message" rows="5" placeholder="Write the report…" required></textarea>
+              </div>
+
+              <div class="form__actions">
+                <button class="btn btn--ghost" id="clearLogBtn" type="button">CLEAR LOCAL LOGBOOK</button>
+                <button class="btn btn--primary" type="submit">SUBMIT</button>
+              </div>
+            </form>
+          </section>
+
+          <!-- Encoded transmission -->
+          <section class="transmission" aria-label="Encoded transmission">
+            <header class="panelhead panelhead--split">
+              <div class="panelhead__title">
+                <span class="icon" aria-hidden="true">📡</span>
+                ENCODED TRANSMISSION
+              </div>
+              <button class="iconbtn" id="txMenuBtn" type="button" aria-label="Transmission options">⋯</button>
+            </header>
+
+            <div class="transmission__body">
+              <p class="muted">
+                Intercepted deep space signal. Origin unknown. Decryption key required.
+              </p>
+
+              <div class="field">
+                <label class="field__label" for="txInput">PAYLOAD</label>
+                <textarea class="field__input field__input--textarea" id="txInput" rows="6" placeholder="Paste encoded message…"></textarea>
+              </div>
+
+              <div class="form__actions">
+                <button class="btn btn--ghost" id="txEncodeBtn" type="button">ENCODE</button>
+                <button class="btn btn--primary" id="txDecodeBtn" type="button">DECODE</button>
+              </div>
+
+              <div class="transmission__footer">
+                <div class="muted">SIGNAL STRENGTH: <strong id="signalStrength">--%</strong></div>
+                <div class="muted">PACKET LOSS: <strong id="packetLoss">--%</strong></div>
+              </div>
+            </div>
+          </section>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+    <script type="module" src="js/missions.js"></script>
+  </body>
+</html>

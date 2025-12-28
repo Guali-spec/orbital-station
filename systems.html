@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>ORBITAL STATION — Systems & Controls</title>
+
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body class="app theme-default" data-page="systems">
+    <div class="shell">
+      <!-- Sidebar -->
+      <aside class="sidebar" aria-label="Station command sidebar">
+        <div class="sidebar__brand">
+          <div class="sidebar__title">STATION<br />COMMAND</div>
+          <div class="sidebar__meta">v <span id="sideVersion">2.4.0-REL</span></div>
+        </div>
+
+        <nav class="snav" aria-label="Sidebar navigation">
+          <a class="snav__item" href="index.html">
+            <span class="snav__icon" aria-hidden="true">▦</span> Overview
+          </a>
+          <a class="snav__item is-active" href="systems.html">
+            <span class="snav__icon" aria-hidden="true">⛭</span> Systems &amp; Controls
+          </a>
+          <a class="snav__item" href="crew.html">
+            <span class="snav__icon" aria-hidden="true">👥</span> Crew &amp; Modules
+          </a>
+          <a class="snav__item" href="missions.html">
+            <span class="snav__icon" aria-hidden="true">🗒</span> Missions &amp; Logbook
+          </a>
+
+          <div class="snav__divider"></div>
+
+          <a class="snav__item" href="#" aria-disabled="true">
+            <span class="snav__icon" aria-hidden="true">📦</span> Cargo Hold
+          </a>
+          <a class="snav__item" href="#" aria-disabled="true">
+            <span class="snav__icon" aria-hidden="true">📹</span> External Cams
+          </a>
+        </nav>
+
+        <div class="sidebar__footer">
+          <button class="snav__logout" id="signOutBtn" type="button">⟵ Sign Out</button>
+        </div>
+      </aside>
+
+      <!-- Main content -->
+      <main class="content">
+        <header class="content__topbar" aria-label="Mission control topbar">
+          <div class="mc">
+            <div class="mc__icon" aria-hidden="true">🚀</div>
+            <div class="mc__text">
+              <div class="mc__title">MISSION CONTROL</div>
+              <div class="mc__sub">
+                <span class="dot dot--green" aria-hidden="true"></span>
+                LIVE CONNECTION
+              </div>
+            </div>
+          </div>
+
+          <div class="content__topbarRight">
+            <div class="timepair">
+              <div>MET: <span id="metTime">--:--:--</span></div>
+              <div class="muted">UTC: <span id="utcTime">--:--:--</span></div>
+            </div>
+            <button class="iconbtn" type="button" aria-label="Notifications">🔔</button>
+            <button class="iconbtn" type="button" aria-label="Settings">⚙</button>
+            <button class="chipbtn" type="button" aria-label="Commander profile">CM</button>
+          </div>
+        </header>
+
+        <section class="pagehead">
+          <h1 class="pagehead__title">SYSTEMS &amp; CONTROLS</h1>
+          <p class="pagehead__subtitle">Real-time telemetry and subsystem diagnostics grid.</p>
+
+          <div class="pagehead__actions">
+            <button class="btn btn--ghost" id="exportLogsBtn" type="button">EXPORT LOGS</button>
+            <button class="btn btn--primary" id="globalResetBtn" type="button">GLOBAL RESET</button>
+          </div>
+        </section>
+
+        <section class="grid2">
+          <!-- Left column: system cards -->
+          <div class="stack">
+            <!-- Life Support -->
+            <article class="syscard" id="sys-life-support" data-system="lifeSupport">
+              <header class="syscard__header">
+                <div class="syscard__left">
+                  <div class="syscard__icon" aria-hidden="true">🍃</div>
+                  <div>
+                    <div class="syscard__title">LIFE SUPPORT</div>
+                    <div class="syscard__meta">Module <span class="muted">LSS-01A</span></div>
+                  </div>
+                </div>
+
+                <div class="badge badge--ok" id="lifeSupportStatus">STATUS: OK</div>
+              </header>
+
+              <div class="syscard__body">
+                <div class="metricrow">
+                  <div class="metric">
+                    <div class="metric__label">OXYGEN</div>
+                    <div class="metric__value"><span id="lsO2">--</span>%</div>
+                    <div class="bar"><div class="bar__fill" id="lsO2Bar"></div></div>
+                  </div>
+
+                  <div class="metric">
+                    <div class="metric__label">PRESSURE</div>
+                    <div class="metric__value"><span id="lsPressure">--</span> kPa</div>
+                    <div class="bar"><div class="bar__fill" id="lsPressureBar"></div></div>
+                  </div>
+
+                  <div class="metric">
+                    <div class="metric__label">CO2 SCRUBBERS</div>
+                    <div class="metric__value" id="lsCo2State">ACTIVE / NOMINAL</div>
+                    <div class="bar"><div class="bar__fill" id="lsCo2Bar"></div></div>
+                  </div>
+                </div>
+
+                <div class="syscard__footer">
+                  <button class="btn btn--link" data-action="diagnostic" data-target="lifeSupport" type="button">
+                    RUN DIAGNOSTIC <span aria-hidden="true">▶</span>
+                  </button>
+                </div>
+              </div>
+            </article>
+
+            <!-- Power Grid -->
+            <article class="syscard syscard--warn" id="sys-power-grid" data-system="power">
+              <header class="syscard__header">
+                <div class="syscard__left">
+                  <div class="syscard__icon" aria-hidden="true">⚡</div>
+                  <div>
+                    <div class="syscard__title">POWER GRID</div>
+                    <div class="syscard__meta warntext">Loop B Voltage Fluctuation</div>
+                  </div>
+                </div>
+
+                <div class="badge badge--warn" id="powerStatus">WARNING</div>
+              </header>
+
+              <div class="syscard__body">
+                <div class="metricrow">
+                  <div class="metric">
+                    <div class="metric__label">MAIN OUTPUT</div>
+                    <div class="metric__value"><span id="pwOutput">--</span>%</div>
+                    <div class="bar"><div class="bar__fill" id="pwOutputBar"></div></div>
+                  </div>
+
+                  <div class="metric">
+                    <div class="metric__label">BATTERY RESERVES</div>
+                    <div class="metric__value" id="pwBatteries">---</div>
+                    <div class="pillrow" id="pwBatteryPips" aria-label="Battery pips"></div>
+                  </div>
+
+                  <div class="metric">
+                    <div class="metric__label">DRAINING</div>
+                    <div class="metric__value" id="pwDrainState">—</div>
+                  </div>
+                </div>
+
+                <div class="syscard__footer syscard__footer--split">
+                  <button class="btn btn--ghost" data-action="isolate" data-target="power" type="button">
+                    ISOLATE LOOP B
+                  </button>
+                  <button class="btn btn--link" data-action="diagnostic" data-target="power" type="button">
+                    RUN DIAGNOSTIC <span aria-hidden="true">▶</span>
+                  </button>
+                </div>
+              </div>
+            </article>
+
+            <!-- Communications -->
+            <article class="syscard" id="sys-comms" data-system="comms">
+              <header class="syscard__header">
+                <div class="syscard__left">
+                  <div class="syscard__icon" aria-hidden="true">📡</div>
+                  <div>
+                    <div class="syscard__title">COMMUNICATIONS</div>
+                    <div class="syscard__meta" id="commsSub">Running self-test…</div>
+                  </div>
+                </div>
+
+                <div class="badge badge--scan" id="commsStatus">SCANNING</div>
+              </header>
+
+              <div class="syscard__body">
+                <div class="progressblock" aria-label="Comms diagnostic progress">
+                  <div class="progressblock__meta">
+                    <div>PROGRESS: <strong id="commsProgressPct">0%</strong></div>
+                    <div class="muted">EST: <span id="commsEta">--:--</span></div>
+                  </div>
+                  <div class="bar bar--thick">
+                    <div class="bar__fill" id="commsProgressBar"></div>
+                  </div>
+                </div>
+
+                <div class="syscard__footer">
+                  <button class="btn btn--link" data-action="diagnostic" data-target="comms" type="button">
+                    RUN DIAGNOSTIC <span aria-hidden="true">▶</span>
+                  </button>
+                </div>
+              </div>
+            </article>
+
+            <!-- Navigation -->
+            <article class="syscard syscard--crit" id="sys-nav" data-system="nav">
+              <header class="syscard__header">
+                <div class="syscard__left">
+                  <div class="syscard__icon" aria-hidden="true">🧭</div>
+                  <div>
+                    <div class="syscard__title">NAVIGATION</div>
+                    <div class="syscard__meta crittext">Gyroscope failure detected</div>
+                  </div>
+                </div>
+
+                <div class="badge badge--crit" id="navStatus">CRITICAL</div>
+              </header>
+
+              <div class="syscard__body">
+                <div class="metricrow">
+                  <div class="metric">
+                    <div class="metric__label">TRAJECTORY DRIFT</div>
+                    <div class="metric__value"><span id="navDrift">--</span>°</div>
+                  </div>
+                  <div class="metric">
+                    <div class="metric__label">STABILIZERS</div>
+                    <div class="metric__value" id="navStabilizers">OFFLINE</div>
+                  </div>
+                </div>
+
+                <div class="syscard__footer">
+                  <button class="btn btn--ghost" data-action="manual" data-target="nav" type="button">
+                    MANUAL CONTROL
+                  </button>
+                  <button class="btn btn--link" data-action="diagnostic" data-target="nav" type="button">
+                    RUN DIAGNOSTIC <span aria-hidden="true">▶</span>
+                  </button>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <!-- Right column: terminal log -->
+          <aside class="terminal" aria-label="System logs terminal">
+            <header class="terminal__header">
+              <div class="terminal__title">SYSTEM_LOGS.TERM</div>
+              <div class="terminal__dots" aria-hidden="true">
+                <span></span><span></span><span></span>
+              </div>
+            </header>
+
+            <div class="terminal__meta">
+              <div>// SESSION ID: <span id="sessionId">---</span></div>
+              <div>// AUTH: <span id="authLevel">LEVEL 4 COMMANDER</span></div>
+              <div>// LOG START: <span id="logStart">--:--:-- UTC</span></div>
+            </div>
+
+            <div class="terminal__body" id="systemsLog" role="log" aria-live="polite" aria-relevant="additions">
+              <!-- JS injects terminal lines -->
+            </div>
+
+            <div class="terminal__prompt" aria-hidden="true">root@station:~#</div>
+          </aside>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+    <script type="module" src="js/sim.js"></script>
+    <script type="module" src="js/systems.js"></script>
+  </body>
+</html>

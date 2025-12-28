@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>ORBITAL STATION — Crew & Modules</title>
+
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body class="app theme-default" data-page="crew">
+    <div class="shell">
+      <!-- Sidebar -->
+      <aside class="sidebar" aria-label="Station command sidebar">
+        <div class="sidebar__brand">
+          <div class="sidebar__title">STATION<br />COMMAND</div>
+          <div class="sidebar__meta">v <span>2.4.0-REL</span></div>
+        </div>
+
+        <nav class="snav" aria-label="Sidebar navigation">
+          <a class="snav__item" href="index.html"><span class="snav__icon" aria-hidden="true">▦</span> Overview</a>
+          <a class="snav__item" href="systems.html"><span class="snav__icon" aria-hidden="true">⛭</span> Systems &amp; Controls</a>
+          <a class="snav__item is-active" href="crew.html"><span class="snav__icon" aria-hidden="true">👥</span> Crew &amp; Modules</a>
+          <a class="snav__item" href="missions.html"><span class="snav__icon" aria-hidden="true">🗒</span> Missions &amp; Logbook</a>
+
+          <div class="snav__divider"></div>
+
+          <a class="snav__item" href="#" aria-disabled="true"><span class="snav__icon" aria-hidden="true">📦</span> Cargo Hold</a>
+          <a class="snav__item" href="#" aria-disabled="true"><span class="snav__icon" aria-hidden="true">📹</span> External Cams</a>
+        </nav>
+
+        <div class="sidebar__footer">
+          <button class="snav__logout" id="signOutBtn" type="button">⟵ Sign Out</button>
+        </div>
+      </aside>
+
+      <!-- Main content -->
+      <main class="content">
+        <header class="content__topbar" aria-label="Mission control topbar">
+          <div class="mc">
+            <div class="mc__icon" aria-hidden="true">🚀</div>
+            <div class="mc__text">
+              <div class="mc__title">MISSION CONTROL</div>
+              <div class="mc__sub"><span class="dot dot--green" aria-hidden="true"></span> LIVE CONNECTION</div>
+            </div>
+          </div>
+
+          <div class="content__topbarRight">
+            <div class="timepair">
+              <div>MET: <span id="metTime">--:--:--</span></div>
+              <div class="muted">UTC: <span id="utcTime">--:--:--</span></div>
+            </div>
+            <button class="iconbtn" type="button" aria-label="Notifications">🔔</button>
+            <button class="iconbtn" type="button" aria-label="Settings">⚙</button>
+            <button class="chipbtn" type="button" aria-label="Commander profile">CM</button>
+          </div>
+        </header>
+
+        <section class="pagehead pagehead--split">
+          <div>
+            <h1 class="pagehead__title">CREW &amp; MODULES</h1>
+            <p class="pagehead__subtitle">Monitor personnel status and station module integrity.</p>
+          </div>
+
+          <div class="pagehead__right">
+            <div class="pill">
+              <span class="dot dot--green" aria-hidden="true"></span>
+              STATION OCCUPANCY: <strong id="occupancy">--/--</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="grid2 grid2--crew">
+          <!-- Left column: crew list -->
+          <div class="crewcol">
+            <div class="crewtools" aria-label="Crew filters">
+              <div class="search">
+                <span class="search__icon" aria-hidden="true">🔎</span>
+                <input id="crewSearch" class="search__input" type="search" placeholder="Search crew..." />
+              </div>
+
+              <div class="segmented" role="tablist" aria-label="Crew role filter">
+                <button class="segmented__btn is-active" data-role="all" type="button" role="tab" aria-selected="true">ALL</button>
+                <button class="segmented__btn" data-role="cmd" type="button" role="tab" aria-selected="false">CMD</button>
+                <button class="segmented__btn" data-role="eng" type="button" role="tab" aria-selected="false">ENG</button>
+                <button class="segmented__btn" data-role="med" type="button" role="tab" aria-selected="false">MED</button>
+              </div>
+            </div>
+
+            <div class="crewlist" id="crewList" aria-label="Crew list">
+              <!-- JS injects crew cards -->
+            </div>
+          </div>
+
+          <!-- Right column: station schematic -->
+          <div class="schematic" aria-label="Station schematic">
+            <header class="schematic__header">
+              <div class="schematic__title">
+                <span class="icon" aria-hidden="true">✣</span>
+                STATION SCHEMATIC
+              </div>
+              <div class="legend" aria-label="Status legend">
+                <span class="legend__item"><span class="dot dot--green" aria-hidden="true"></span> NOMINAL</span>
+                <span class="legend__item"><span class="dot dot--amber" aria-hidden="true"></span> WARNING</span>
+                <span class="legend__item"><span class="dot dot--red" aria-hidden="true"></span> CRITICAL</span>
+              </div>
+            </header>
+
+            <div class="schematic__canvas" id="moduleMap" aria-label="Modules map">
+              <!-- JS builds clickable module nodes -->
+            </div>
+
+            <div class="schematic__hint" role="note">
+              <strong>INFO:</strong> Hover modules for status.<br />
+              <strong>CLICK:</strong> View detailed checklist.
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Module Modal -->
+    <div class="modal" id="moduleModal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="moduleModalTitle">
+      <div class="modal__backdrop" data-close="modal" tabindex="-1"></div>
+
+      <div class="modal__panel" role="document">
+        <header class="modal__header">
+          <div>
+            <div class="modal__kicker">MODULE</div>
+            <h2 class="modal__title" id="moduleModalTitle">—</h2>
+          </div>
+          <button class="iconbtn" type="button" aria-label="Close modal" data-close="modal">✕</button>
+        </header>
+
+        <div class="modal__body">
+          <p class="modal__desc" id="moduleModalDesc">—</p>
+
+          <div class="checklist">
+            <div class="checklist__title">CHECKLIST</div>
+            <div class="checklist__items" id="moduleChecklist">
+              <!-- JS injects checklist items -->
+            </div>
+          </div>
+        </div>
+
+        <footer class="modal__footer">
+          <button class="btn btn--ghost" type="button" data-close="modal">CLOSE</button>
+          <button class="btn btn--primary" id="saveChecklistBtn" type="button">SAVE</button>
+        </footer>
+      </div>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+    <script type="module" src="js/sim.js"></script>
+    <script type="module" src="js/crew.js"></script>
+  </body>
+</html>

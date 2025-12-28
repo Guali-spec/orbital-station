@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>ORBITAL STATION — Dashboard</title>
+
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body class="app theme-default" data-page="dashboard">
+    <!-- Top Bar -->
+    <header class="topbar">
+      <div class="topbar__left">
+        <a class="brand" href="index.html" aria-label="Orbital Station Home">
+          <div class="brand__mark" aria-hidden="true">⛓️</div>
+          <div class="brand__text">
+            <div class="brand__title">ORBITAL STATION</div>
+            <div class="brand__subtitle">ALPHA // SECTOR 7G</div>
+          </div>
+        </a>
+      </div>
+
+      <nav class="topbar__nav" aria-label="Primary navigation">
+        <a class="navpill is-active" href="index.html">
+          <span class="navpill__icon" aria-hidden="true">▦</span>
+          <span class="navpill__label">Dashboard</span>
+        </a>
+        <a class="navpill" href="systems.html">
+          <span class="navpill__icon" aria-hidden="true">⛭</span>
+          <span class="navpill__label">Systems</span>
+        </a>
+        <a class="navpill" href="crew.html">
+          <span class="navpill__icon" aria-hidden="true">👥</span>
+          <span class="navpill__label">Crew</span>
+        </a>
+        <a class="navpill" href="missions.html">
+          <span class="navpill__icon" aria-hidden="true">🚀</span>
+          <span class="navpill__label">Missions</span>
+        </a>
+      </nav>
+
+      <div class="topbar__right">
+        <div class="clock">
+          <div class="clock__label">UTC TIME</div>
+          <div class="clock__value" id="utcTime">--:--:--</div>
+        </div>
+
+        <div class="statuschip statuschip--ok" id="globalStatusChip" role="status" aria-live="polite">
+          <span class="statuschip__dot" aria-hidden="true"></span>
+          <span class="statuschip__label" id="globalStatusLabel">OPERATIONAL</span>
+        </div>
+
+        <button class="iconbtn" id="notifBtn" type="button" aria-label="Notifications">
+          🔔
+        </button>
+        <button class="avatarbtn" id="userBtn" type="button" aria-label="User menu">
+          <span class="avatarbtn__avatar" aria-hidden="true">👨‍🚀</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main -->
+    <main class="dashboard">
+      <!-- Left: Main view -->
+      <section class="panel panel--mainview" aria-label="Main view live feed">
+        <header class="panel__header">
+          <div class="panel__titlewrap">
+            <div class="panel__kicker">
+              <span class="dot dot--cyan" aria-hidden="true"></span>
+              MAIN VIEW // LIVE FEED
+            </div>
+            <div class="panel__meta">
+              <span id="cameraLabel">CAM-04</span>
+              <span class="muted">[ACTIVE]</span>
+              <span class="sep">•</span>
+              <span id="feedRes">1080p</span>
+              <span class="sep">•</span>
+              <span id="feedFps">60FPS</span>
+            </div>
+          </div>
+
+          <div class="panel__headerRight">
+            <div class="recchip" id="recChip" aria-label="Recording status">
+              <span class="recchip__dot" aria-hidden="true"></span>
+              <span class="recchip__label">REC</span>
+            </div>
+            <div class="tag" id="tMinusTag">T-MINUS 04:00:00</div>
+          </div>
+        </header>
+
+        <div class="mainview">
+          <!-- 3D Canvas -->
+          <div class="mainview__canvasWrap">
+            <canvas id="main3d" class="mainview__canvas" aria-label="3D station view"></canvas>
+
+            <!-- Optional overlay grid/reticle handled by CSS -->
+            <div class="mainview__hud" aria-hidden="true">
+              <div class="hud__reticle"></div>
+              <div class="hud__grid"></div>
+            </div>
+          </div>
+
+          <!-- Bottom tools (like the mockup) -->
+          <div class="mainview__toolbar" aria-label="View controls">
+            <div class="toolgroup">
+              <button class="toolbtn" id="zoomInBtn" type="button" title="Zoom in" aria-label="Zoom in">+</button>
+              <button class="toolbtn" id="zoomOutBtn" type="button" title="Zoom out" aria-label="Zoom out">−</button>
+              <button class="toolbtn" id="orbitBtn" type="button" title="Orbit controls" aria-label="Orbit controls">⟲</button>
+              <button class="toolbtn" id="resetViewBtn" type="button" title="Reset view" aria-label="Reset view">⛶</button>
+            </div>
+
+            <div class="coords" aria-label="Target coordinates">
+              <div class="coords__label">TARGET COORDINATES</div>
+              <div class="coords__values">
+                <span class="coords__item">X: <strong id="coordX">---</strong></span>
+                <span class="coords__item">Y: <strong id="coordY">---</strong></span>
+                <span class="coords__item">Z: <strong id="coordZ">---</strong></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right: Status + Controls + Logs -->
+      <aside class="sidecol" aria-label="Control column">
+        <!-- Systems nominal card -->
+        <section class="card card--status" aria-label="Systems nominal">
+          <div class="card__row">
+            <div class="iconbadge iconbadge--ok" aria-hidden="true">✓</div>
+            <div class="card__content">
+              <div class="card__title">SYSTEMS NOMINAL</div>
+              <p class="card__desc">All core functions operating within normal parameters.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Controls card -->
+        <section class="card card--controls" aria-label="Controls">
+          <header class="card__header">
+            <div class="card__headerTitle">
+              <span class="icon" aria-hidden="true">🎚️</span>
+              CONTROLS
+            </div>
+            <span class="statusdot statusdot--ok" aria-hidden="true"></span>
+          </header>
+
+          <div class="card__body">
+            <div class="toggleRow">
+              <div class="toggleRow__text">
+                <div class="toggleRow__title">ORBIT CYCLE</div>
+                <div class="toggleRow__hint">Manual Override</div>
+              </div>
+              <label class="switch" aria-label="Orbit cycle">
+                <input id="orbitCycleToggle" type="checkbox" />
+                <span class="switch__ui" aria-hidden="true"></span>
+              </label>
+            </div>
+
+            <div class="toggleRow">
+              <div class="toggleRow__text">
+                <div class="toggleRow__title">LOW POWER</div>
+                <div class="toggleRow__hint">Conserve Energy</div>
+              </div>
+              <label class="switch" aria-label="Low power mode">
+                <input id="lowPowerToggle" type="checkbox" />
+                <span class="switch__ui" aria-hidden="true"></span>
+              </label>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="alertbox" aria-label="Emergency override">
+              <div class="alertbox__head">
+                <span class="alertbox__icon" aria-hidden="true">⚠</span>
+                <span class="alertbox__title">EMERGENCY OVERRIDE</span>
+              </div>
+
+              <div class="toggleRow toggleRow--alert">
+                <div class="toggleRow__text">
+                  <div class="toggleRow__title">RED ALERT</div>
+                  <div class="toggleRow__hint">Emergency Mode</div>
+                </div>
+                <label class="switch switch--alert" aria-label="Red alert">
+                  <input id="redAlertToggle" type="checkbox" />
+                  <span class="switch__ui" aria-hidden="true"></span>
+                </label>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="logpanel" aria-label="System log">
+              <div class="logpanel__title">SYSTEM LOG</div>
+              <div class="logpanel__body" id="dashLog" role="log" aria-live="polite" aria-relevant="additions">
+                <!-- JS injects log lines -->
+              </div>
+              <div class="logpanel__prompt" aria-hidden="true">&gt;_</div>
+            </div>
+
+            <footer class="card__footer">
+              <div class="buildmeta">
+                <div>BUILD v<span id="buildVersion">2.0.4</span></div>
+                <div class="muted">UNSA CORP</div>
+              </div>
+            </footer>
+          </div>
+        </section>
+      </aside>
+
+      <!-- Bottom KPI Row -->
+      <section class="kpirow" aria-label="Key performance indicators">
+        <article class="kpocard kpocard--cyan" aria-label="Altitude">
+          <header class="kpocard__header">
+            <div class="kpocard__label">ALTITUDE</div>
+            <div class="kpocard__icon" aria-hidden="true">⛰</div>
+          </header>
+          <div class="kpocard__value">
+            <span id="kpiAltitude">---</span><span class="unit">km</span>
+          </div>
+          <div class="kpocard__sub">
+            <span id="kpiAltitudeDelta" class="delta delta--ok">—</span>
+            <span class="muted" id="kpiAltitudeHint">Stable</span>
+          </div>
+          <div class="kpocard__bar" aria-hidden="true"></div>
+        </article>
+
+        <article class="kpocard kpocard--blue" aria-label="Orbital speed">
+          <header class="kpocard__header">
+            <div class="kpocard__label">ORBITAL SPEED</div>
+            <div class="kpocard__icon" aria-hidden="true">🧭</div>
+          </header>
+          <div class="kpocard__value">
+            <span id="kpiSpeed">---</span><span class="unit">km/s</span>
+          </div>
+          <div class="kpocard__sub">
+            <span id="kpiSpeedDelta" class="delta delta--neutral">—</span>
+            <span class="muted" id="kpiSpeedHint">Variance</span>
+          </div>
+          <div class="kpocard__bar" aria-hidden="true"></div>
+        </article>
+
+        <article class="kpocard kpocard--green" aria-label="Oxygen levels">
+          <header class="kpocard__header">
+            <div class="kpocard__label">OXYGEN LEVELS</div>
+            <div class="kpocard__icon" aria-hidden="true">〰</div>
+          </header>
+          <div class="kpocard__value">
+            <span id="kpiOxygen">---</span><span class="unit">%</span>
+          </div>
+          <div class="kpocard__sub">
+            <span id="kpiOxygenDelta" class="delta delta--warn">—</span>
+            <span class="muted" id="kpiOxygenHint">Leak Check</span>
+          </div>
+          <div class="kpocard__bar" aria-hidden="true"></div>
+        </article>
+
+        <article class="kpocard kpocard--amber" aria-label="Energy reserve">
+          <header class="kpocard__header">
+            <div class="kpocard__label">ENERGY RESERVE</div>
+            <div class="kpocard__icon" aria-hidden="true">⚡</div>
+          </header>
+          <div class="kpocard__value">
+            <span id="kpiEnergy">---</span><span class="unit">%</span>
+          </div>
+          <div class="kpocard__sub">
+            <span id="kpiEnergyDelta" class="delta delta--warn">—</span>
+            <span class="muted" id="kpiEnergyHint">Consumption</span>
+          </div>
+          <div class="kpocard__bar" aria-hidden="true"></div>
+        </article>
+      </section>
+    </main>
+
+    <!-- Scripts -->
+    <script type="module" src="js/main.js"></script>
+    <script type="module" src="js/sim.js"></script>
+    <script type="module" src="js/three-scene.js"></script>
+    <script type="module" src="js/dashboard.js"></script>
+  </body>
+</html>
